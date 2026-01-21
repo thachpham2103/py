@@ -11,7 +11,6 @@ def nhap_san_pham():
 
     return pd.DataFrame(ds, columns=["Mã SP", "Số lượng"])
 
-
 def nhap_loai_san_pham():
     m = int(input("Nhập số lượng loại sản phẩm: "))
     ds = []

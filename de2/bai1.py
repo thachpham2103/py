@@ -1,67 +1,61 @@
+import csv
 
-def nhap_san_pham():
-    n=int(input("Nhap vao dict co {n} phan tu:"))
-    a= dict()
-    for i in range (n):
-        maSP=input("Nhap vao mã SP:")
-        soLuong=int(input("Nhap vao so luong SP:"))
-        a[maSP]=soLuong
+def nhap_sp():
+    a = {}
+    n = int(input("Số SP: "))
+    for _ in range(n):
+        a[input("Mã SP: ")] = int(input("Số lượng: "))
     return a
-def nhap_loai_san_pham():
-    m= int(input("Nhap vao dict co {m} phan tu:"))
-    b= dict()
-    for j in range (m):
-        maLoaiSP=input("Nhap vao mã loại SP:")
-        tenLoaiSP=input("Nhap vao tên loại SP:")
-        b[maLoaiSP]=tenLoaiSP 
+
+def nhap_loai():
+    b = {}
+    m = int(input("Số loại SP: "))
+    for _ in range(m):
+        b[input("Mã loại: ")] = input("Tên loại: ")
     return b
 
-def xuat(a,b) :
-    print("\n--------------------- THÔNG TIN SẢN PHẨM ---------------------")
-    print("{:<15}|{:>15}".format("Mã SP", "Số lượng"))
-    print("-" * 30)
-    for maSP, soLuong in a.items():
-        print("{:<15}|{:>15}".format(maSP, soLuong))
-
-    print("\n--------------------- THÔNG TIN LOẠI SẢN PHẨM ---------------------")
-    print("{:<15}|{:>25}".format("Mã loại SP", "Tên loại SP"))
-    print("-" * 40)
-    for maLoaiSP, tenLoaiSP in b.items():
-        print("{:<15}|{:>25}".format(maLoaiSP, tenLoaiSP))
-
 def check_sp(a):
-    maSP_check=input("Nhap vao mã SP cần kiểm tra:")
-    if maSP_check in a:
-        a["soLuong"]=100
-    else:
-        a[maSP_check]=50
+    ma = input("Mã SP cần kiểm tra: ")
+    a[ma] = 100 if ma in a else 50
     return a
 
-def delete(a,soLuong):
-    if a[soLuong]==0:
-        del a[soLuong]
-    else:
-        print("Rỗng")
-    return a
 
-def chuyen_dict(a):
-    ma=list(a.keys())
-    sl=list(a.values())
-    return ma, sl
+def xoa_sl_0(a):
+    return {k: v for k, v in a.items() if v != 0}
+
+
+def ghi_csv(a, b):
+    with open("san_pham.csv", "w", newline="", encoding="utf-8-sig") as f:
+        csv.writer(f).writerows([["MaSP", "SoLuong"]] + list(a.items()))
+
+    with open("loai_sp.csv", "w", newline="", encoding="utf-8-sig") as f:
+        csv.writer(f).writerows([["MaLoai", "TenLoai"]] + list(b.items()))
+
+
+def doc_csv():
+    a, b = {}, {}
+    with open("san_pham.csv", encoding="utf-8-sig") as f:
+        for i, r in enumerate(csv.reader(f)):
+            if i > 0: a[r[0]] = int(r[1])
+
+    with open("loai_sp.csv", encoding="utf-8-sig") as f:
+        for i, r in enumerate(csv.reader(f)):
+            if i > 0: b[r[0]] = r[1]
+    return a, b
+
 
 def main():
-    a= nhap_san_pham()
-    b= nhap_loai_san_pham()
-    xuat(a,b)
-    a= check_sp(a)
-    print("\nSau khi kiểm tra mã SP:")
-    xuat(a,b)
-    a= delete(a)
-    print("\nSau khi xóa sản phẩm có số lượng 0:")
-    xuat(a,b)
-    ma, sl= chuyen_dict(a)
-    print("\nChuyển dict sang 2 list:")
-    print("Mã SP:", ma)
-    print("Số lượng:", sl)
+    a = nhap_sp()
+    b = nhap_loai()
+
+    a = check_sp(a)
+    a = xoa_sl_0(a)
+
+    ghi_csv(a, b)
+    a, b = doc_csv()
+
+    print("\nSẢN PHẨM:", a)
+    print("LOẠI SP:", b)
+
 if __name__ == "__main__":
     main()
