@@ -48,7 +48,7 @@ def xoa_so_luong_bang_0(a):
 def tach_list(a):
     list1= list(a.keys())
     list2= list(a.values())
-
+    
     print("Phần tử đầu danh sách:", list1[:3])
     print("Phần tử cuối danh sách:", list2[-3:])    
 
